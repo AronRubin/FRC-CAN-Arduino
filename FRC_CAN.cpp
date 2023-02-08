@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "frc_CAN.h"
 #include "frc_mcp2515.h"
 

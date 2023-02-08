@@ -441,6 +441,7 @@ class MCP2515
         } RXB[N_RXBUFFERS];
 
         uint8_t SPICS;
+		SPIClass &m_SPI = SPI;
 
     private:
 
@@ -458,7 +459,7 @@ class MCP2515
         void prepareId(uint8_t *buffer, const bool ext, const uint32_t id);
     
     public:
-        MCP2515(const uint8_t _CS);
+        MCP2515(const uint8_t _CS, SPIClass &spi = SPI);
         ERROR reset(void);
         ERROR setConfigMode();
         ERROR setListenOnlyMode();

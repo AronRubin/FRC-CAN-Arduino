@@ -2,9 +2,28 @@
 
 #include <stdint.h>
 
+
 namespace frc
 {
+
+/*
+ ************************
+ FRC Specific CAN Handing
+ ************************
+*/
+
 class MCP2515;
+
+/*
+FRC Packet Id Field Bits
+
++--------------+-----------------------+-----------------+-----------+------------------+
+| Device Type  |     Manufacturer      |       API       |  Index    |  Device Number   |
++--------------+-----------------------+-----------------+-----------+------------------+
+|28:27:26:25:24|23:22:21:20:19:18:17:16|15:14:13:12:11:10| 9: 8: 7: 6| 5: 4 : 3: 2: 1: 0|
++--------------+-----------------------+-----------------+-----------+------------------+
+*/
+
 struct CANData
 {
   uint8_t data[8];
@@ -45,10 +64,23 @@ enum class CANManufacturer
   kStudica = 12
 };
 
+const uint8_t HeartbeatIsRedAllianceMask = 0x01;
+const uint8_t HeartbeatIsEnabledMask = 0x02;
+const uint8_t HeartbeatIsAutonomousMask = 0x04;
+const uint8_t HeartbeatIsTestMask = 0x08;
+const uint8_t HeartbeatIsWatchdogEnabledMask = 0x10;
+
+
+// 01111010
+// 10111001
+
 constexpr uint32_t createCANId(uint16_t apiId, uint8_t deviceId, uint8_t manufacturer, uint8_t deviceType)
 {
   return (static_cast<uint32_t>(deviceType) & 0x1F) << 24 | (static_cast<uint32_t>(manufacturer) & 0xFF) << 16 | (apiId & 0x3FF) << 6 | (deviceId & 0x3F);
 }
+
+// constexpr uint32_t RIO_HEARTBEAT_ID = createCANId( 0x62, 0, kNI, kRobotController );
+const uint32_t RIO_HEARTBEAT_ID = 0x01011840;
 
 class CAN
 {
